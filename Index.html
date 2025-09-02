@@ -4,11 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estante Virtual</title>
+    <!-- CSS -->
     <link rel="stylesheet" href="style.css">
+    <!-- Fontes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- JS -->
+    <script src="app.js" defer></script>
 </head>
 <body>
-    <h1>Estante Virtual</h1>
-    
+    <div class="stand-container">
+        <header>
+            <h1>Estante Virtual</h1>
+        </header>
+        <form id="stand-form">
+            <p>Adicionar livro:</p>
+            <div class="form-control">
+                <input type="text" id="stand-input" placeholder="Proxima Leitura...">
+                <button type="submit">
+                    <i class="fa-thin fa-plus"></i>
+                </button>
+            </div>
+        </form>
+        <form id="edit-form">
+            <p>Edite Seus livros:</p>
+            <div class="form-control">
+                <input type="text" id="edit-input">
+                <button type="submit">
+                    <i class="fa-solid fa-check-double"></i>
+                </button>
+            </div>
+            <button id="cancel-edit-btn">Cancelar</button>
+        </form>
+        <div id="tool-bar">
+            <div id="search">
+                <h4>Pesquisar:</h4>
+                <form>
+                    <input type="text" id="serach-input" placeholder="Buscar">
+                    <button id="erase-button">
+                        <i class="fa-solid fa-delete-left"></i>
+                    </button>
+                </form>
+            </div>
+            <div id="filter">
+                <h4>Filtrar</h4>
+                <select id="filter-select">
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+    </div>
 </body>
-<script src="app.js"></script>
 </html>
