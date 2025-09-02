@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <!-- Fontes -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
     <!-- JS -->
     <script src="app.js" defer></script>
 </head>
@@ -21,11 +22,11 @@
             <div class="form-control">
                 <input type="text" id="stand-input" placeholder="Proxima Leitura...">
                 <button type="submit">
-                    <i class="fa-thin fa-plus"></i>
+                    <i class="fa-solid fa-plus"></i>
                 </button>
             </div>
         </form>
-        <form id="edit-form">
+        <form id="edit-form" class="">
             <p>Edite Seus livros:</p>
             <div class="form-control">
                 <input type="text" id="edit-input">
@@ -52,6 +53,35 @@
                 </select>
             </div>
         </div>
+
+        <!-- Template -->
+         <div id="stand-virtual">
+            <div class="stand done">
+                <h3>O principe - Maquiavel</h3>
+                <button class="finish-stand">
+                    <i class="fa-solid fa-check"></i>
+                </button>
+                <button class="edit-stand">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+                <button class="remove-stand">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="stand">
+                <h3>Mistborn - Brandon</h3>
+                <button class="finish-stand">
+                    <i class="fa-solid fa-check"></i>
+                </button>
+                <button class="edit-stand">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+                <button class="remove-stand">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
     </div>
 </body>
 </html>
