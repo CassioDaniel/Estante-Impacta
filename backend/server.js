@@ -19,17 +19,21 @@ const db = mysql.createConnection({
 
 // Inserir livro
 app.post("/livros", (req, res) => {
-  const { titulo } = req.body;
+  const { titulo, autor } = req.body;
 
-  if (!titulo) {
-    return res.status(400).json({ error: "Título é obrigatório" });
+  if (!titulo || !autor) {
+    return res.status(400).json({ error: "Título e autor são obrigatórios" });
   }
 
-  db.query("INSERT INTO livros (titulo) VALUES (?)", [titulo], (err, result) => {
-    if (err) return res.status(500).json(err);
+  db.query(
+    "INSERT INTO livros (titulo, autor) VALUES (?, ?)",
+    [titulo, autor],
+    (err, result) => {
+      if (err) return res.status(500).json(err);
 
-    res.json({ id: result.insertId, titulo });
-  });
+      res.json({ id: result.insertId, titulo, autor });
+    }
+  );
 });
 
 // rota de Listar todos os livros

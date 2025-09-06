@@ -1,7 +1,8 @@
 const form = document.querySelector("#stand-form");
-const input = document.querySelector("#stand-input");
+const titleInput = document.querySelector("#title");
+const authorInput = document.querySelector("#author");
 const list = document.querySelector("#stand-virtual");
-const template = document.querySelector("#livro-template");
+const template = document.querySelector("#book-template");
 
 // Função para carregar livros do banco
 async function carregarLivros() {
@@ -11,8 +12,9 @@ async function carregarLivros() {
   list.innerHTML = ""; // limpa a lista antes de renderizar
 
   livros.forEach(livro => {
-    const clone = template.content.cloneNode(true); // clona o modelo
-    clone.querySelector("h3").textContent = livro.titulo;
+    const clone = template.content.cloneNode(true);
+    clone.querySelector(".book-titulo").textContent = livro.titulo;
+    clone.querySelector(".book-autor").textContent = livro.autor;
     list.appendChild(clone);
   });
 }
@@ -20,17 +22,19 @@ async function carregarLivros() {
 // Adicionar novo livro
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const titulo = input.value.trim();
+  const titulo = titleInput.value.trim();
+  const autor = authorInput.value.trim();
 
-  if (!titulo) return;
+  if (!titulo || !autor) return;
 
   await fetch("http://localhost:3000/livros", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ titulo })
+    body: JSON.stringify({ titulo, autor })
   });
 
-  input.value = "";
+  titleInput.value = "";
+  authorInput.value = "";
   carregarLivros();
 });
 
