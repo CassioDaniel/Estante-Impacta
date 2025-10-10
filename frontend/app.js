@@ -9,12 +9,32 @@ async function carregarLivros() {
   const res = await fetch("http://localhost:3000/livros");
   const livros = await res.json();
 
-  list.innerHTML = ""; // limpa a lista antes de renderizar
+  // Remove apenas os itens renderizados, não o template
+  list.querySelectorAll(".stand").forEach(el => el.remove());
 
   livros.forEach(livro => {
     const clone = template.content.cloneNode(true);
     clone.querySelector(".book-titulo").textContent = livro.titulo;
     clone.querySelector(".book-autor").textContent = livro.autor;
+
+    // Botão excluir
+    const deleteBtn = clone.querySelector(".remove-stand");
+    deleteBtn.addEventListener("click", async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/livros/${livro.id}`, {
+          method: "DELETE",
+        });
+
+        if (response.ok) {
+          carregarLivros();
+        } else {
+          console.error("Erro ao excluir livro");
+        }
+      } catch (error) {
+        console.error("Erro:", error);
+      }
+    });
+
     list.appendChild(clone);
   });
 }
@@ -27,15 +47,19 @@ form.addEventListener("submit", async (e) => {
 
   if (!titulo || !autor) return;
 
-  await fetch("http://localhost:3000/livros", {
+  const res = await fetch("http://localhost:3000/livros", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ titulo, autor })
   });
 
-  titleInput.value = "";
-  authorInput.value = "";
-  carregarLivros();
+  if (res.ok) {
+    titleInput.value = "";
+    authorInput.value = "";
+    carregarLivros();
+  } else {
+    console.error("Erro ao adicionar livro");
+  }
 });
 
 // Carregar ao abrir a página
