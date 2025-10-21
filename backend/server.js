@@ -36,7 +36,7 @@ app.post("/livros", (req, res) => {
   );
 });
 
-// rota de Listar todos os livros
+// Listar todos os livros
 app.get("/livros", (req, res) => {
   db.query("SELECT * FROM livros", (err, result) => {
     if (err) return res.status(500).json(err);
@@ -45,6 +45,47 @@ app.get("/livros", (req, res) => {
   });
 });
 
+// Excluir livro pelo ID
+app.delete("/livros/:id", (req, res) => {
+  const { id } = req.params;
+
+  db.query("DELETE FROM livros WHERE id = ?", [id], (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: "Erro ao excluir livro" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Livro não encontrado" });
+    }
+
+    res.status(200).json({ message: "Livro excluído com sucesso!" });
+  });
+});
+
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
 });
+
+// Atualizar livro pelo ID
+app.put("/livros/:id", (req, res) => {
+  const { id } = req.params;
+  const { titulo, autor } = req.body;
+
+  if (!titulo || !autor) {
+    return res.status(400).json({ error: "Título e autor são obrigatórios" });
+  }
+
+  const query = "UPDATE livros SET titulo = ?, autor = ? WHERE id = ?";
+  db.query(query, [titulo, autor, id], (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: "Erro ao atualizar livro" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Livro não encontrado" });
+    }
+
+    res.status(200).json({ message: "Livro atualizado com sucesso!" });
+  });
+});
+
