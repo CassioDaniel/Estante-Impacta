@@ -178,3 +178,20 @@ input, select {
   font-style: italic;
   letter-spacing: 0.5px;
 }
+
+.finish-stand i {
+  font-size: 20px;
+  transition: 0.2s;
+}
+/* Status de leitura */
+.check-on {
+  color: #29cf29; /* verde */
+}
+
+.check-off {
+  color: #343b57; /* cinza */
+}
+
+.stand.lido {
+  background: #31f431; /* fundo verde claro */
+}

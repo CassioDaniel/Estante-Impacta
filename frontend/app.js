@@ -4,14 +4,14 @@ const authorInput = document.querySelector("#author");
 const list = document.querySelector("#stand-virtual");
 const template = document.querySelector("#book-template");
 
-let editandoLivroId = null; // controla se está editando algum livro
+let editandoLivroId = null; // controla quando está editando
 
-// Função para carregar livros do banco
+// Carregar livros do banco
 async function carregarLivros() {
   const res = await fetch("http://localhost:3000/livros");
   const livros = await res.json();
 
-  // Limpa os livros exibidos
+  // limpa lista na tela
   list.querySelectorAll(".stand").forEach(el => el.remove());
 
   livros.forEach(livro => {
@@ -20,29 +20,40 @@ async function carregarLivros() {
     const autorEl = clone.querySelector(".book-autor");
     const deleteBtn = clone.querySelector(".remove-stand");
     const editBtn = clone.querySelector(".edit-stand");
+    const finishBtn = clone.querySelector(".finish-stand");
+    const checkIcon = finishBtn.querySelector("i");
+    const standDiv = clone.querySelector(".stand");
 
     tituloEl.textContent = livro.titulo;
     autorEl.textContent = livro.autor;
 
-    // Excluir
-    deleteBtn.addEventListener("click", async () => {
-      try {
-        const response = await fetch(`http://localhost:3000/livros/${livro.id}`, {
-          method: "DELETE",
-        });
-        if (response.ok) carregarLivros();
-      } catch (error) {
-        console.error("Erro:", error);
-      }
+    // Visual do botão check e fundo da div
+    if (livro.lido) {
+      standDiv.classList.add("lido");
+      checkIcon.classList.add("check-on");
+    } else {
+      checkIcon.classList.add("check-off");
+    }
+
+    // Toggle: lido x não lido
+    finishBtn.addEventListener("click", async () => {
+      await fetch(`http://localhost:3000/livros/${livro.id}/lido`, { method: "PUT" });
+      carregarLivros();
     });
 
-    // Editar → carrega o nome e autor nos inputs superiores
+    // Excluir
+    deleteBtn.addEventListener("click", async () => {
+      const res = await fetch(`http://localhost:3000/livros/${livro.id}`, { method: "DELETE" });
+      if (res.ok) carregarLivros();
+    });
+
+    // Editar
     editBtn.addEventListener("click", () => {
       titleInput.value = livro.titulo;
       authorInput.value = livro.autor;
-      editandoLivroId = livro.id; // guarda o ID que está sendo editado
+      editandoLivroId = livro.id;
 
-      // muda o ícone do botão pra indicar edição
+      // troca ícone do botão para salvar
       form.querySelector("button i").classList.remove("fa-plus");
       form.querySelector("button i").classList.add("fa-save");
     });
@@ -51,7 +62,7 @@ async function carregarLivros() {
   });
 }
 
-// Adicionar OU Editar livro
+// Adicionar ou editar livro
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -59,7 +70,7 @@ form.addEventListener("submit", async (e) => {
   const autor = authorInput.value.trim();
   if (!titulo || !autor) return;
 
-  // Se estiver editando um livro existente
+  // Editando
   if (editandoLivroId) {
     const res = await fetch(`http://localhost:3000/livros/${editandoLivroId}`, {
       method: "PUT",
@@ -68,18 +79,16 @@ form.addEventListener("submit", async (e) => {
     });
 
     if (res.ok) {
-      editandoLivroId = null; // sai do modo edição
+      editandoLivroId = null;
       form.querySelector("button i").classList.remove("fa-save");
       form.querySelector("button i").classList.add("fa-plus");
       titleInput.value = "";
       authorInput.value = "";
       carregarLivros();
-    } else {
-      console.error("Erro ao editar livro");
     }
 
   } else {
-    // Caso contrário: adiciona um novo
+    // Novo livro
     const res = await fetch("http://localhost:3000/livros", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -90,11 +99,9 @@ form.addEventListener("submit", async (e) => {
       titleInput.value = "";
       authorInput.value = "";
       carregarLivros();
-    } else {
-      console.error("Erro ao adicionar livro");
     }
   }
 });
 
-// Carregar ao abrir a página
+// Carregar ao abrir
 carregarLivros();

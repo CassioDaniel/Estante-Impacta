@@ -89,3 +89,18 @@ app.put("/livros/:id", (req, res) => {
   });
 });
 
+// Alternar status de lido
+app.put("/livros/:id/lido", (req, res) => {
+  const { id } = req.params;
+
+  // Alterna lido (1 → 0, 0 → 1)
+  db.query(
+    "UPDATE livros SET lido = NOT lido WHERE id = ?",
+    [id],
+    (err, result) => {
+      if (err) return res.status(500).json(err);
+      if (result.affectedRows === 0) return res.status(404).json({ error: "Livro não encontrado" });
+      res.json({ message: "Status 'lido' atualizado" });
+    }
+  );
+});
